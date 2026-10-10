@@ -1,0 +1,19 @@
+# AML: repeated transfers just under 50,000 (structuring). Seeded incident: structuring (C100321).
+name: IMPS structuring below 50k
+type: frequency
+index: bank-txn-*
+num_events: 5
+timeframe:
+  hours: 3
+query_key: customer.id
+filter:
+- term:
+    channel: IMPS
+- range:
+    amount:
+      gte: 45000
+      lt: 50000
+realert:
+  hours: 12
+alert:
+- debug

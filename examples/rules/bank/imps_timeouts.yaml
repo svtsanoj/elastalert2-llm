@@ -1,0 +1,19 @@
+# DEBUG TARGET: should have fired during yesterday's imps-timeouts burst but never fires.
+# Ask the assistant: "Why didn't the IMPS timeouts alert fire yesterday?"
+name: IMPS beneficiary bank timeouts
+type: frequency
+index: bank-txn-*
+num_events: 20
+timeframe:
+  minutes: 10
+filter:
+- term:
+    channel: IMPS
+- term:
+    status: failed
+- term:
+    response_code: "08"
+realert:
+  minutes: 30
+alert:
+- debug

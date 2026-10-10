@@ -1,0 +1,14 @@
+# ATM ops: an ATM reports it has run out of cash. Seeded incident: atm-cash-out (ATM0012).
+name: ATM cash out
+type: any
+index: bank-metrics-*
+query_key: atm.id
+filter:
+- term:
+    metricset: atm
+- term:
+    atm.status: cash_out
+realert:
+  hours: 2
+alert:
+- debug

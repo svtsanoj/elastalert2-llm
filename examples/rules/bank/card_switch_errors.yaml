@@ -1,0 +1,17 @@
+# DEBUG TARGET: should fire during card-hsm-errors (~40 minutes ago) but doesn't.
+# Ask the assistant: "Why didn't 'card-switch errors' fire about 40 minutes ago?"
+name: card-switch errors
+type: frequency
+index: bank-applogs-*
+num_events: 10
+timeframe:
+  minutes: 10
+filter:
+- term:
+    service.name: card-switch
+- term:
+    log.level: ERROR
+realert:
+  minutes: 30
+alert:
+- debug

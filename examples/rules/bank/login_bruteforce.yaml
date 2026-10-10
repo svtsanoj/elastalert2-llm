@@ -1,0 +1,15 @@
+# Security: many failed logins from one IP. Seeded incidents: brute-force, credential-stuffing.
+name: Login brute force by IP
+type: frequency
+index: bank-auth-*
+num_events: 20
+timeframe:
+  minutes: 5
+query_key: source.ip
+filter:
+- term:
+    event.outcome: failure
+realert:
+  minutes: 30
+alert:
+- debug

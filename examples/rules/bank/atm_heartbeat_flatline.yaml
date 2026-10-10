@@ -1,0 +1,15 @@
+# ATM ops: an ATM stops sending its 10-minute heartbeat. Seeded incident: atm-offline (ATM0007).
+name: ATM heartbeat missing
+type: flatline
+index: bank-metrics-*
+threshold: 1
+timeframe:
+  minutes: 30
+query_key: atm.id
+filter:
+- term:
+    metricset: atm
+realert:
+  hours: 1
+alert:
+- debug

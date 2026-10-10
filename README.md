@@ -28,6 +28,18 @@ The rules folder defaults to `examples/rules`. Two of its three rules are delibe
 
 To use the Elasticsearch tools, start the local stack in the fork's `_claude_docs/setup/es-local`, seed a scenario, and enter the ES URL, user and password in the toolbar. The password is never saved to disk; other settings are saved to `~/.elastalert2-llm.json`.
 
+## Mock banking data
+
+`elastalert2-llm-bank-seed` loads about 236k synthetic Indian banking documents into a local Elasticsearch: transactions on UPI, IMPS, NEFT, RTGS, POS, e-commerce and ATM, plus service logs, logins, metrics and a service catalogue. On top of that baseline it injects 16 incidents, such as outages, fraud, AML and brute-force patterns, plus field drift. `examples/rules/bank/` has an ElastAlert rule for each incident; two of them are deliberately broken, for debugging practice.
+
+```powershell
+copy .env.example .env        # fill in ES_PASSWORD (and ES_CA_CERTS for a self-signed cluster)
+.venv\Scripts\elastalert2-llm-bank-seed --list
+.venv\Scripts\elastalert2-llm-bank-seed --reset
+```
+
+The data is relative to "now", so reseed before each testing session.
+
 ## Development
 
 ```powershell

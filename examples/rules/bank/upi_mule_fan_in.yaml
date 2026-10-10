@@ -1,0 +1,19 @@
+# Fraud / AML: many different payers paying one UPI ID in a short time (possible mule account).
+# Seeded incident: mule-fan-in (quickcash.refund@ybl).
+name: UPI mule fan-in
+type: cardinality
+index: bank-txn-*
+query_key: upi.payee_vpa
+cardinality_field: upi.payer_vpa
+max_cardinality: 15
+timeframe:
+  minutes: 30
+filter:
+- term:
+    channel: UPI
+- term:
+    upi.mode: P2P
+realert:
+  hours: 6
+alert:
+- debug

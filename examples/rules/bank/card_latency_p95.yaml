@@ -1,0 +1,18 @@
+# Payment ops: card-switch p95 latency from the 5-minute service metrics. Seeded incident: card-latency.
+name: card-switch p95 latency high
+type: metric_aggregation
+index: bank-metrics-*
+buffer_time:
+  minutes: 10
+metric_agg_key: latency.p95_ms
+metric_agg_type: max
+max_threshold: 1500
+filter:
+- term:
+    metricset: service
+- term:
+    service.name: card-switch
+realert:
+  minutes: 30
+alert:
+- debug

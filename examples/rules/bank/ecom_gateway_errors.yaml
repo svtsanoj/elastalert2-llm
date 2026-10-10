@@ -1,0 +1,16 @@
+# Payment ops on another team's log format: epoch-millis 'event_time', severity 'E'. Seeded incident: ecom-5xx.
+name: E-commerce gateway errors
+type: frequency
+index: bank-ecomgw-logs-*
+timestamp_field: event_time
+timestamp_type: unix_ms
+num_events: 20
+timeframe:
+  minutes: 5
+filter:
+- term:
+    sev: E
+realert:
+  minutes: 30
+alert:
+- debug

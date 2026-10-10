@@ -1,0 +1,14 @@
+# AML: a retail customer moves 1 crore or more. Seeded incident: high-value-odd-hour (C100888).
+name: High-value transfer by retail customer
+type: any
+index: bank-txn-*
+filter:
+- term:
+    customer.segment: retail
+- range:
+    amount:
+      gte: 10000000
+realert:
+  minutes: 0
+alert:
+- debug

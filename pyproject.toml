@@ -20,6 +20,7 @@ dev = ["pytest>=8", "flake8>=7"]
 
 [project.scripts]
 elastalert2-llm = "elastalert_llm.gui.app:main"
+elastalert2-llm-bank-seed = "elastalert_llm.devtools.bank.seed:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

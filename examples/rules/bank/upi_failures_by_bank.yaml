@@ -1,0 +1,18 @@
+# Payment ops: many UPI failures towards one counterparty bank.
+# Seeded incidents: upi-bank-down (PNB), and every bank during payments-outage.
+name: UPI failures by counterparty bank
+type: frequency
+index: bank-txn-*
+num_events: 15
+timeframe:
+  minutes: 10
+query_key: counterparty.bank
+filter:
+- term:
+    channel: UPI
+- term:
+    status: FAILED
+realert:
+  minutes: 30
+alert:
+- debug

@@ -11,3 +11,5 @@ All notable changes are documented here. The format follows [Keep a Changelog](h
 - Rule validator built on ElastAlert 2's own loader, with hints for common gaps.
 - Tkinter GUI: chat, rule editor with validation, tool-call trace.
 - Example rules, including deliberately flawed ones.
+- CA certificate setting and a connection test for Elasticsearch in the GUI.
+- `elastalert2-llm-bank-seed`: synthetic Indian banking data (7 index families, 16 injected incidents) with matching example rules in `examples/rules/bank/`.

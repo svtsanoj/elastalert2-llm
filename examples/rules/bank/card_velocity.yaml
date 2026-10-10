@@ -1,0 +1,16 @@
+# Fraud: one card used in 3+ cities within 15 minutes. Seeded incident: card-velocity (C100777).
+name: Card used in many cities
+type: cardinality
+index: bank-txn-*
+query_key: card.masked
+cardinality_field: geo.city
+max_cardinality: 2
+timeframe:
+  minutes: 15
+filter:
+- terms:
+    channel: [POS, ECOM, ATM]
+realert:
+  hours: 1
+alert:
+- debug

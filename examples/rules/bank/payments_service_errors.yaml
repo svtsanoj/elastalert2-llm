@@ -1,0 +1,16 @@
+# Payment ops: error log bursts per service. During payments-outage this fires once per service
+# (upi-switch, imps-hub, neft-hub): the roll-up building block should turn that into one 'payments' incident.
+name: Service error burst
+type: frequency
+index: bank-applogs-*
+num_events: 30
+timeframe:
+  minutes: 5
+query_key: service.name
+filter:
+- term:
+    log.level: ERROR
+realert:
+  minutes: 30
+alert:
+- debug

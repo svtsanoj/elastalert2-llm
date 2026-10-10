@@ -1,0 +1,16 @@
+# ElastAlert 2 config for the local Elasticsearch zip install (HTTPS with a self-signed CA).
+# Credentials come from the environment: set ES_USERNAME and ES_PASSWORD (ElastAlert reads both).
+# Copy to elastalert.local.yaml (git-ignored) and fix ca_certs if your path differs.
+rules_folder: examples/rules/bank
+run_every:
+  minutes: 1
+buffer_time:
+  minutes: 15
+es_host: localhost
+es_port: 9200
+use_ssl: true
+verify_certs: true
+ca_certs: "C:/Users/Sanoj/Proj Tools/elasticsearch-9.5.4-windows-x86_64/elasticsearch-9.5.4/config/certs/http_ca.crt"
+writeback_index: elastalert_status
+alert_time_limit:
+  days: 2
