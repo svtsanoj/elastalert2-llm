@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "elastalert2-llm"
+version = "0.0.1"
+description = "An agentic LLM assistant that creates, debugs and explains ElastAlert 2 rules"
+readme = "README.md"
+license = "Apache-2.0"
+requires-python = ">=3.12"
+dependencies = [
+    "elastalert2>=2.31,<3",
+    "requests>=2.31",
+    "PyYAML>=6",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "flake8>=7"]
+
+[project.scripts]
+elastalert2-llm = "elastalert_llm.gui.app:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

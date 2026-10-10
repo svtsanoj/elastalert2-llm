@@ -1,0 +1,11 @@
+# Fires when pay-01 stops sending heartbeats. Deliberately broken: flatline needs 'threshold'.
+name: pay-01 heartbeat missing
+type: flatline
+index: heartbeat-*
+timeframe:
+  minutes: 5
+filter:
+- term:
+    host: pay-01
+alert:
+- debug

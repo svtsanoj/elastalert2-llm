@@ -1,0 +1,14 @@
+# Plain-text logs from app-b. Deliberate traps: 'term' on an analysed text field, and no realert.
+name: app-b payment failures
+type: frequency
+index: app-b-logs-*
+num_events: 5
+timeframe:
+  minutes: 10
+filter:
+- term:
+    message: "payment failed"
+alert:
+- email
+email:
+- oncall@example.com

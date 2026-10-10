@@ -1,0 +1,16 @@
+# Fires when card-auth logs 10+ errors within 5 minutes (matches the seeder's simple-frequency scenario).
+name: card-auth errors
+type: frequency
+index: app-a-logs-*
+num_events: 10
+timeframe:
+  minutes: 5
+filter:
+- term:
+    level: ERROR
+- term:
+    service.name: card-auth
+realert:
+  minutes: 30
+alert:
+- debug
