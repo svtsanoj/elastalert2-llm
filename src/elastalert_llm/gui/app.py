@@ -13,6 +13,7 @@ from tkinter.scrolledtext import ScrolledText
 
 from elastalert_llm.agent import Agent, ToolBox
 from elastalert_llm.agent.tools import es_client_from_settings
+from elastalert_llm.es import ESError
 from elastalert_llm.llm import LLMError, OllamaBackend
 from elastalert_llm.verify import validate_rule_text
 
@@ -30,6 +31,7 @@ DEFAULTS = {
     "rules_dir": str(EXAMPLE_RULES) if EXAMPLE_RULES.is_dir() else "",
     "es_url": "http://localhost:9200",
     "es_user": "elastic",
+    "es_ca": "",
 }
 
 STARTERS = {
@@ -110,6 +112,11 @@ class App:
         ttk.Label(es, text="Password").pack(side="left")
         self.es_password = tk.StringVar(value="")  # never saved to disk
         ttk.Entry(es, textvariable=self.es_password, width=14, show="•").pack(side="left", padx=4)
+        ttk.Label(es, text="CA cert").pack(side="left")
+        self.es_ca = tk.StringVar(value=s["es_ca"])
+        ttk.Entry(es, textvariable=self.es_ca, width=16).pack(side="left", padx=4)
+        ttk.Button(es, text="…", width=3, command=self._browse_ca).pack(side="left")
+        ttk.Button(es, text="Test", command=self.test_es).pack(side="left", padx=(6, 0))
 
     def _build_body(self):
         panes = ttk.PanedWindow(self.root, orient="horizontal")
@@ -226,8 +233,7 @@ class App:
 
     def _agent(self):
         """Reuse the conversation, but pick up any toolbar changes."""
-        toolbox = ToolBox(self.rules_dir.get() or None,
-                          es_client_from_settings(self.es_url.get(), self.es_user.get(), self.es_password.get()))
+        toolbox = ToolBox(self.rules_dir.get() or None, self._es_client())
         options = {"num_ctx": int(self.num_ctx.get()), "temperature": float(self.temperature.get())}
         backend = OllamaBackend(self.ollama_url.get())
         if self.agent is None:
@@ -283,6 +289,26 @@ class App:
         self.editor.delete("1.0", "end")
         self.editor.insert("1.0", self.last_yaml)
         self.validate_editor()
+
+    def _es_client(self):
+        return es_client_from_settings(self.es_url.get(), self.es_user.get(), self.es_password.get(), self.es_ca.get().strip() or None)
+
+    def test_es(self):
+        client = self._es_client()
+        if client is None:
+            messagebox.showwarning("Elasticsearch", "Enter the ES URL first.")
+            return
+        try:
+            info = client.get("/")
+        except ESError as e:
+            messagebox.showerror("Elasticsearch", str(e))
+            return
+        self.status.set(f"Connected to Elasticsearch {info['version']['number']} ({info.get('cluster_name', '')})")
+
+    def _browse_ca(self):
+        path = filedialog.askopenfilename(filetypes=[("Certificates", "*.crt *.pem"), ("All", "*.*")])
+        if path:
+            self.es_ca.set(path)
 
     def _browse_rules(self):
         path = filedialog.askdirectory(initialdir=self.rules_dir.get() or None)
@@ -356,7 +382,8 @@ class App:
     def _save_settings(self):
         settings = {"ollama_url": self.ollama_url.get(), "model": self.model.get(), "num_ctx": int(self.num_ctx.get()),
                     "temperature": float(self.temperature.get()), "use_tools": self.use_tools.get(),
-                    "rules_dir": self.rules_dir.get(), "es_url": self.es_url.get(), "es_user": self.es_user.get()}
+                    "rules_dir": self.rules_dir.get(), "es_url": self.es_url.get(), "es_user": self.es_user.get(),
+                    "es_ca": self.es_ca.get()}
         try:
             SETTINGS_FILE.write_text(json.dumps(settings, indent=2), encoding="utf-8")
         except OSError:

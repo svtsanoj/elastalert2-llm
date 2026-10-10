@@ -167,8 +167,9 @@ def _dump(result):
     return text
 
 
-def es_client_from_settings(url, username=None, password=None):
+def es_client_from_settings(url, username=None, password=None, ca_certs=None):
+    """ca_certs: path to the cluster's CA file (e.g. config/certs/http_ca.crt for a self-signed local install)."""
     if not url:
         return None
-    return ESClient(url, username=username or None, password=password or None,
-                    verify_certs=os.environ.get("ES_VERIFY_CERTS", "1") != "0")
+    verify = ca_certs or (os.environ.get("ES_VERIFY_CERTS", "1") != "0")
+    return ESClient(url, username=username or None, password=password or None, verify_certs=verify)
